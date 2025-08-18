@@ -1,13 +1,9 @@
 def tratament_span_offers(span):
-    param = "Comparar";
-    print("Span", span)
+    param = "Comparar outras ";
 
     ind = span.find(param);
-    print("Ind:" , ind)
 
     start = ind + len(param);
-    print("Start", start)
-    end = span.find(" ", start);
-    print("End", end)
+    end = span.find(" ", start + 1);
 
     return span[start:end];

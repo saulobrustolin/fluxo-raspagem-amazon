@@ -13,4 +13,5 @@ def scrapping(ch, method, properties, body):
     soup = start(url, condition);
 
     # lógica para capturar o n° de ofertas ativas
-    number_offers(soup)
+    offers = number_offers(soup)
+    print("Offers", offers)

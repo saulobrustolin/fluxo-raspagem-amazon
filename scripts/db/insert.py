@@ -1,22 +1,27 @@
 import psycopg2
 
-conexao = psycopg2.connect(
-    host="localhost",
-    database="meu_banco",
-    user="meu_usuario",
-    password="minha_senha"
-)
+def query(table, campos, values):
+    connect = psycopg2.connect(
+        host="localhost",
+        database="amazon",
+        user="postgres",
+        password="masterkey"
+    )
 
-cursor = conexao.cursor()
+    cursor = connect.cursor()
 
-sql = "INSERT INTO clientes (nome, email) VALUES (%s, %s)"
-valores = ("Saulo Brustolin", "saulo@email.com")
+    # tratamentos
+    campos = ", ".join(campos);
+    values = ", ".join(values);
 
-cursor.execute(sql, valores)
+    sql = "INSERT INTO %s (%s) VALUES (%s)"
+    values = (table, campos, values)
 
-conexao.commit()
+    cursor.execute(sql, values)
 
-print("Linha inserida com sucesso!")
+    connect.commit()
 
-cursor.close()
-conexao.close()
+    print("Linha inserida com sucesso!")
+
+    cursor.close()
+    connect.close()

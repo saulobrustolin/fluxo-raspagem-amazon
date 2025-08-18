@@ -1,6 +1,6 @@
 # consumer
 import pika
-from scrapping_product import scrapping_product
+from scripts.product.scrapping_product import scrapping
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
@@ -9,7 +9,7 @@ channel.queue_declare(queue='products_link', durable=True)
 
 channel.basic_consume(
     queue='products_link', 
-    on_message_callback=scrapping_product, 
+    on_message_callback=scrapping, 
     auto_ack=True,
     )
 

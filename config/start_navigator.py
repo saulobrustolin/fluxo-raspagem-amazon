@@ -1,4 +1,5 @@
 from playwright.sync_api import sync_playwright
+from config.config import headers
 from bs4 import BeautifulSoup
 import time
 import random
@@ -10,10 +11,10 @@ def init_browser(headless=True):
     global _playwright_instance, _browser_instance
     if _playwright_instance is None or _browser_instance is None:
         _playwright_instance = sync_playwright().start()
-        _browser_instance = _playwright_instance.chromium.launch(headless=headless)
+        _browser_instance = _playwright_instance.chromium.launch(headless=headless, args=["--window-size=1366,768"])
     return _browser_instance
 
-def start(headers, url, condition):
+def start(url, condition):
     while True:
         try:
             if _browser_instance is None:
@@ -34,7 +35,8 @@ def start(headers, url, condition):
         
          # se der erro no carregamento da página
         except:
-            time.sleep(random.randint(40, 60));
+            page.close();
+            time.sleep(random.randint(20, 40));
             continue
 
 def close():

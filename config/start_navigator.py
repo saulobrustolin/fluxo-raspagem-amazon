@@ -3,6 +3,7 @@ from config.config import headers
 from bs4 import BeautifulSoup
 import time
 import random
+from config.utils.solve_captcha import solve_captcha
 
 _playwright_instance = None
 _browser_instance = None
@@ -28,15 +29,25 @@ def start(url, condition):
                 })
             
             page.goto(url)
-            page.wait_for_selector(condition, timeout=10000)
+            page.wait_for_selector(condition, timeout=5000)
             html = page.content()
             page.close()
+            print('[page] Não precisou de CAPTCHA, estou retornando o conteúdo correto')
             return BeautifulSoup(html, "html.parser")
         
          # se der erro no carregamento da página
         except:
+            print('[page] Retornou uma página diferente da pretendida, irei tentar resolver com CAPTCHA')
+            # verifica se existe captcha
+            captcha = solve_captcha(page);
+            if captcha:
+                print('[captcha] CAPTCHA resolvido')
+                return captcha
+            
+            sleep = random.randint(20, 40);
+            print(f"[captcha] Não deu certo no CAPTCHA vou esperar {sleep} segundos")
             page.close();
-            time.sleep(random.randint(20, 40));
+            time.sleep(sleep);
             continue
 
 def close():

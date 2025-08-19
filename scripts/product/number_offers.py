@@ -1,16 +1,17 @@
 from scripts.product.utils.detect_span import detect_span
-from scripts.product.utils.tratament_span_offers import tratament_span_offers
 
 def number_offers(soup):
-    box_general = soup.find('div', id='dynamic-aod-ingress-box');
-    span_list = box_general.find_all('span', class_='a-color-base');
+    try:
+        print("[offers] Iniciando a raspagem...")
+        span_list = soup.find_all('span', class_='a-color-base');
+        print("[offers] Consegui pegar a lista de span, seguindo...\n")
 
-    # detectar qual é o span que possui
-    span_brute = detect_span(span_list);
-    if not span_brute:
-        return 1
-
-    span_clean = tratament_span_offers(span_brute.getText());
-    span_clean = str(span_clean).strip()
-    if span_clean:
-        return int(span_clean)
+        # detectar qual é o span que possui
+        span_brute = detect_span(span_list);
+        print(f"[offers] Consegui detectar o span correto<'{span_brute}'>, seguindo...")
+        if not span_brute:
+            return 1
+        if span_brute:
+            return int(span_brute.strip())
+    except:
+        return

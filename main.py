@@ -5,7 +5,7 @@ def main():
     url = "https://www.amazon.com.br/s?me=AWB62XDVP19UK&marketplaceID=A2Q3Y263D00KWC&s=exact-aware-popularity-rank";
 
     # processo de inicialização
-    init_browser();
+    init_browser(headless=True);
 
     # lógica para pegar os itens  
     list_products(url);

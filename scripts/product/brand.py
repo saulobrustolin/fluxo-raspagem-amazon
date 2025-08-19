@@ -1,17 +1,13 @@
+from scripts.product.utils.detect_brand_method_a import detect_brand_method_a
+from scripts.product.utils.detect_brand_method_b import detect_brand_method_b
+
 def get_brand(soup):
-    try:
-        box_general = soup.find('p', id="pqv-byline");
-        print("box_general:", box_general);
-        brand_string = str(box_general.getText());
-        print("brand_string:", brand_string);
-        brand_string = brand_string.lower();
-
-        param = "brand de ";
-
-        tratament_brand = brand_string.find(param);
-
-        brand = tratament_brand[len(param):];
-    
-        return str(brand).strip();
-    except:
-        return
+    print("[brand] Tentando capturar a marca através do método A...")
+    brand = detect_brand_method_a(soup);
+    if brand and brand != "None":
+        return brand
+    print('[brand] Não foi possível capturar a marca, tentando o método B...')
+    brand = detect_brand_method_b(soup);
+    if brand and brand != "None":
+        return brand
+    print('[brand] Não foi possível capturar a marca, abortando...')

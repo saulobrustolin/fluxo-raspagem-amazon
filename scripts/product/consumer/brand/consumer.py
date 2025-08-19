@@ -8,8 +8,8 @@ async def main():
     
     queue = await channel.declare_queue(
         "brand_name",
-        durable=True,       # igual ao existente
-        auto_delete=False   # ou True se a fila original for auto_delete
+        durable=True,
+        auto_delete=False
     )
 
     async with queue.iterator() as queue_iter:
@@ -17,4 +17,5 @@ async def main():
             async with message.process():
                 await access_inpi(None, None, None, message.body)
 
+print(' [*] Aguardando mensagens. Para sair pressione CTRL+C')
 asyncio.run(main())

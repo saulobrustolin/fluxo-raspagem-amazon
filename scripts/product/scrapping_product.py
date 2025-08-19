@@ -6,37 +6,42 @@ from config.start_navigator import init_browser
 from scripts.product.utils.insert_brand_in_rabbit import insert_in_rabbit
 
 def scrapping(ch, method, properties, body):
-    url = body.decode();
+    try:
+        url = body.decode();
 
-    # processo de inicialização
-    init_browser(headless=True);
+        # processo de inicialização
+        init_browser(headless=True);
+        
+        condition = 'div[id="dynamic-aod-ingress-box"]';
+
+        soup = start(url, condition);
+
+        # print url
+        print("\nIniciando raspagem...")
+        print("\nURL:", url);
+        print('\n')
+
+        # lógica para capturar o n° de ofertas ativas
+        offers = number_offers(soup)
+        print(f"[offers] O número retornado da oferta foi '{offers}'")
+        if not offers:
+            return
+        if offers > 20:
+            return
+
+        # lógica para capturar a nota de avaliação do produto
+        avaliable = get_avaliable(soup);
+        print(f"[avaliable] O número retornado da avaliação foi '{avaliable}'")
+        if avaliable and avaliable <= 4:
+            return
+
+        # lógica para capturar a marca e realizar seus tratamentos
+        brand = get_brand(soup);
+        if brand:
+            insert_in_rabbit(brand)
+        print(f"[brand] A marca retornada foi '{brand}'")
+        if not brand:
+            return
+    except:
+        return
     
-    condition = 'div[id="dynamic-aod-ingress-box"]';
-
-    soup = start(url, condition);
-
-    # print url
-    print("\nURL:", url);
-    print('\n')
-
-    # lógica para capturar o n° de ofertas ativas
-    offers = number_offers(soup)
-    print(f"[offers] O número retornado da oferta foi '{offers}'")
-    if not offers:
-        return
-    if offers > 20:
-        return
-
-    # lógica para capturar a nota de avaliação do produto
-    avaliable = get_avaliable(soup);
-    print(f"[avaliable] O número retornado da avaliação foi '{avaliable}'")
-    if avaliable and avaliable <= 4:
-        return
-
-    # lógica para capturar a marca e realizar seus tratamentos
-    brand = get_brand(soup);
-    if brand:
-        insert_in_rabbit(brand)
-    print(f"[brand] O número retornado da marca foi '{brand}'")
-    if not brand:
-        return

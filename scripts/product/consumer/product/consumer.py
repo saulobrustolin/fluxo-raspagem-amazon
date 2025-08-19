@@ -2,7 +2,11 @@
 import pika
 from scripts.product.scrapping_product import scrapping
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+    'localhost',
+    heartbeat=65535,
+    blocked_connection_timeout=65535
+    ))
 channel = connection.channel()
 
 channel.queue_declare(queue='products_link', durable=True)

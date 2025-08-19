@@ -1,6 +1,6 @@
 import psycopg2
 
-def query(table, campos, values):
+def verify_in_database_brand(brand):
     connect = psycopg2.connect(
         host="localhost",
         database="amazon",
@@ -10,18 +10,18 @@ def query(table, campos, values):
 
     cursor = connect.cursor()
 
-    # tratamentos
-    campos = ", ".join(campos);
-    values = ", ".join(values);
+    sql = "SELECT isregistred FROM brand WHERE brand = %s"
 
-    sql = "INSERT INTO %s (%s) VALUES (%s)"
-    values = (table, campos, values)
+    cursor.execute(sql, brand)
 
-    cursor.execute(sql, values)
-
-    connect.commit()
+    result = cursor.fetchone()
 
     print("Linha inserida com sucesso!")
 
     cursor.close()
     connect.close()
+
+    if result:
+        return result[0]
+    else:
+        return None

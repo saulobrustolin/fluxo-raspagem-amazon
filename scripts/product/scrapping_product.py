@@ -2,6 +2,7 @@ from automation.utils.start_navigator import start
 from scripts.product.number_offers import number_offers
 from scripts.product.avaliable import get_avaliable
 from scripts.product.brand import get_brand
+from scripts.db.insert_temp import query_temp
 import aio_pika
 
 from automation.inpi.access_inpi import access_inpi
@@ -38,6 +39,12 @@ async def scrapping(message: aio_pika.IncomingMessage):
 
         # lógica para capturar a marca e realizar seus tratamentos
         brand = get_brand(soup);
+
+        # inserir em uma tabela temporária
+        query_temp({
+            'link': url,
+            'brand': brand
+        })
 
         brand_database = None
         if brand:

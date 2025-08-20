@@ -1,6 +1,5 @@
 import psycopg2
 
-
 def query_brand(brand, isregister):
     try:
         connect = psycopg2.connect(

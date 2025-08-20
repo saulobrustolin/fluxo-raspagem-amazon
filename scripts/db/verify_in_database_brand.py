@@ -26,4 +26,5 @@ def verify_in_database_brand(brand):
         else:
             return None
     except:
+        print('[verify_in_database_brand] Estou caindo no except')
         return None

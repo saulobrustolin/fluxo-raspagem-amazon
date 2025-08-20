@@ -20,8 +20,6 @@ def scrapping(ch, method, properties, body):
 
         # print url
         print("\nIniciando raspagem...")
-        print("\nURL:", url);
-        print('\n')
 
         # lógica para capturar o n° de ofertas ativas
         offers = number_offers(soup)
@@ -36,6 +34,10 @@ def scrapping(ch, method, properties, body):
         print(f"[avaliable] O número retornado da avaliação foi '{avaliable}'")
         if avaliable and avaliable <= 4:
             return
+
+        # passei em alguns filtros, então irei printar o url
+        print("\nURL:", url);
+        print('\n')
 
         # lógica para capturar a marca e realizar seus tratamentos
         brand = get_brand(soup);

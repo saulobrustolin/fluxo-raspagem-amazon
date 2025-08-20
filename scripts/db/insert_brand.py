@@ -2,25 +2,28 @@ import psycopg2
 
 
 def query_brand(brand, isregister):
-    connect = psycopg2.connect(
-        host="localhost",
-        port=7000,
-        database="amazon",
-        user="amazon",
-        password="amazon",
-        options='-c client_encoding=UTF8'
-    )
+    try:
+        connect = psycopg2.connect(
+            host="localhost",
+            port=7000,
+            database="amazon",
+            user="amazon",
+            password="amazon",
+            options='-c client_encoding=UTF8'
+        )
 
-    cursor = connect.cursor()
+        cursor = connect.cursor()
 
-    sql = "INSERT INTO brand (name, isregister) VALUES (%s, %s)"
-    values = (brand, isregister)
+        sql = "INSERT INTO brand (name, isregister) VALUES (%s, %s)"
+        values = (brand, isregister)
 
-    cursor.execute(sql, values)
+        cursor.execute(sql, values)
 
-    connect.commit()
+        connect.commit()
 
-    print(f"Salvei a marca '{brand}' com o status de registro: {isregister}")
+        print(f"Salvei a marca '{brand}' com o status de registro: {isregister}")
 
-    cursor.close()
-    connect.close()
+        cursor.close()
+        connect.close()
+    except:
+        print(f"[insert_brand] Estou caindo no except")

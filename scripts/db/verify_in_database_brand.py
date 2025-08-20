@@ -12,9 +12,9 @@ def verify_in_database_brand(brand):
 
         cursor = connect.cursor()
 
-        sql = "SELECT isregistred FROM brand WHERE brand = %s"
+        sql = "SELECT isregister FROM brand WHERE name = %s"
 
-        cursor.execute(sql, brand)
+        cursor.execute(sql, (str(brand),))
 
         result = cursor.fetchone()
 
@@ -25,6 +25,6 @@ def verify_in_database_brand(brand):
             return result[0]
         else:
             return None
-    except:
-        print('[verify_in_database_brand] Estou caindo no except')
+    except Exception as e:
+        print('[verify_in_database_brand] Estou caindo no except:', e)
         return None

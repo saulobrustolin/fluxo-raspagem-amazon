@@ -9,7 +9,7 @@ from scripts.db.insert_brand import query_brand
 from scripts.db.verify_in_database_brand import verify_in_database_brand
 
 # async def access_inpi(ch, method, properties, body):
-def access_inpi(brand):
+async def access_inpi(brand):
     try:
         # try:
         #     brand = body.decode('utf-8', errors='ignore');
@@ -31,22 +31,22 @@ def access_inpi(brand):
         url = 'https://busca.inpi.gov.br/pePI/servlet/LoginController?action=login';
         condition = "img[src='/pePI/jsp/imagens/painel_servicos2_rgb.jpg']";
 
-        playwright, browser, page = load_page(url, condition, headless=True)
+        playwright, browser, page = await load_page(url, condition, headless=True)
 
         # step 1: access brand section
-        navigate_section(page)
+        await navigate_section(page)
         # step 2: access url brand
-        access_url_brand(page)
+        await access_url_brand(page)
         # step 3: insert text in input
-        insert_text(page, brand)
+        await insert_text(page, brand)
         # step 4: search
-        click_button_search(page)
+        await click_button_search(page)
         # step 5: verify if is registred
-        isRegistred = verify_brand(page)
+        isRegistred = await verify_brand(page)
 
         # fechando o navegador
-        page.close()
-        browser.close()
+        await page.close()
+        await browser.close()
 
         # salva no banco de dados
         query_brand(brand, isRegistred)

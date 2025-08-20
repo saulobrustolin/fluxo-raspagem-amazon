@@ -18,6 +18,8 @@ def init_browser(headless=True):
 def start(url, condition):
     while True:
         try:
+            init_browser(headless=True)
+
             if _browser_instance is None:
                 raise Exception("Navegador não inicializado! Chame init_browser() antes.")
 

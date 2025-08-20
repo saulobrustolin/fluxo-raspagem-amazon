@@ -1,25 +1,22 @@
-from config.start_navigator import start
+from automation.utils.start_navigator import start
 from scripts.product.number_offers import number_offers
 from scripts.product.avaliable import get_avaliable
 from scripts.product.brand import get_brand
-from config.start_navigator import init_browser
-# from scripts.product.utils.insert_brand_in_rabbit import insert_in_rabbit
+import aio_pika
 
 from automation.inpi.access_inpi import access_inpi
 
-def scrapping(ch, method, properties, body):
+async def scrapping(message: aio_pika.IncomingMessage):
     try:
-        url = body.decode();
+        url = message.body.decode();
 
-        # processo de inicialização
-        init_browser(headless=True);
-        
+        # processo de inicialização        
         condition = 'div[id="dynamic-aod-ingress-box"]';
 
-        soup = start(url, condition);
+        soup = await start(url, condition);
 
         # print url
-        print("\nIniciando raspagem...")
+        print("Iniciando raspagem...")
 
         # lógica para capturar o n° de ofertas ativas
         offers = number_offers(soup)
@@ -44,7 +41,7 @@ def scrapping(ch, method, properties, body):
 
         brand_database = None
         if brand:
-            brand_database = access_inpi(brand)
+            brand_database = await access_inpi(brand)
         print(f"[brand] A marca retornada foi '{brand_database}'")
         if not brand:
             return

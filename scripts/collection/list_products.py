@@ -15,6 +15,8 @@ def list_products(url):
             temp_url += f"&s=exact-aware-popularity-rank";
         temp_url = temp_url + f"&page={page}";
 
+        print(f"[list_products] Acessando a página: {temp_url}")
+
         soup = start(temp_url, condition);
 
         cards_product = soup.find_all("div", role="listitem")

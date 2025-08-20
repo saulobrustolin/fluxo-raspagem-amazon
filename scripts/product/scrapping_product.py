@@ -3,7 +3,9 @@ from scripts.product.number_offers import number_offers
 from scripts.product.avaliable import get_avaliable
 from scripts.product.brand import get_brand
 from config.start_navigator import init_browser
-from scripts.product.utils.insert_brand_in_rabbit import insert_in_rabbit
+# from scripts.product.utils.insert_brand_in_rabbit import insert_in_rabbit
+
+from automation.inpi.access_inpi import access_inpi
 
 def scrapping(ch, method, properties, body):
     try:
@@ -37,9 +39,11 @@ def scrapping(ch, method, properties, body):
 
         # lógica para capturar a marca e realizar seus tratamentos
         brand = get_brand(soup);
+
+        brand_database = None
         if brand:
-            insert_in_rabbit(brand)
-        print(f"[brand] A marca retornada foi '{brand}'")
+            brand_database = access_inpi(brand)
+        print(f"[brand] A marca retornada foi '{brand_database}'")
         if not brand:
             return
     except:

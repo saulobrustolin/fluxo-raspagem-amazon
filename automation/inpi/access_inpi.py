@@ -6,37 +6,50 @@ from automation.steps.click_button_search import click_button_search
 from automation.steps.verify_brand import verify_brand
 
 from scripts.db.insert_brand import query_brand
+from scripts.db.verify_in_database_brand import verify_in_database_brand
 
-async def access_inpi(ch, method, properties, body):
+# async def access_inpi(ch, method, properties, body):
+def access_inpi(brand):
     try:
-        try:
-            brand = body.decode('utf-8', errors='ignore');
-        except:
-            brand = body.decode('latin-1', errors='ignore');
+        # try:
+        #     brand = body.decode('utf-8', errors='ignore');
+        # except:
+        #     brand = body.decode('latin-1', errors='ignore');
+
+        print(f'[access_inpi] Começando a fazer as verificações para "{brand}"')
 
         # antes de tudo: verificar se a marca já está registrada no banco de dados
-        
-        print(f'Começando a fazer as verificações para "{brand}"')
+        verify_in_db = verify_in_database_brand(brand)
+        if verify_in_db == True:
+            print(f'[brand] A marca {brand} está registrada no banco de dados como TRUE')
+            return True
+        if verify_in_db == False:
+            print(f'[brand] A marca {brand} está registrada no banco de dados como FALSE')
+            return False
+
 
         url = 'https://busca.inpi.gov.br/pePI/servlet/LoginController?action=login';
         condition = "img[src='/pePI/jsp/imagens/painel_servicos2_rgb.jpg']";
 
-        playwright, browser, page = await load_page(url, condition, headless=True)
+        playwright, browser, page = load_page(url, condition, headless=True)
 
         # step 1: access brand section
-        await navigate_section(page)
+        navigate_section(page)
         # step 2: access url brand
-        await access_url_brand(page)
+        access_url_brand(page)
         # step 3: insert text in input
-        await insert_text(page, brand)
-        return
+        insert_text(page, brand)
         # step 4: search
-        await click_button_search(page)
+        click_button_search(page)
         # step 5: verify if is registred
-        isRegistred = await verify_brand(page)
+        isRegistred = verify_brand(page)
+
+        # fechando o navegador
+        page.close()
+        browser.close()
 
         # salva no banco de dados
-        # query_brand(brand, isRegistred)
+        query_brand(brand, isRegistred)
 
         if isRegistred == False:
             print(f'[brand] A marca NÃO está registrada - {brand}')
@@ -48,9 +61,4 @@ async def access_inpi(ch, method, properties, body):
     except Exception as e:
         print(f"[brand] Estou caindo em exception: {e}")
         return True
-    finally:
-        # fechando o navegador
-        await page.close()
-        await browser.close()
-    
     
